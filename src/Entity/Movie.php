@@ -53,21 +53,17 @@ class Movie
      */
     private $runtimeMinutes;
 
+
+
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\ManyToMany (targetEntity="Genre" ,inversedBy="movies")
      */
     private $genres;
 
 
-    /**
-     * @ORM\ManyToMany (targetEntity="App\Entity\Category" ,inversedBy="movies")
-     */
-    private $categories;
-
-
     public function __construct()
     {
-        $this->categories = new ArrayCollection();
+        $this->genres = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -164,24 +160,9 @@ class Movie
         return $this->genres;
     }
 
-    public function setGenres(?string $genres): self
-    {
-        $this->genres = $genres;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCategories()
-    {
-        return $this->categories;
-    }
-
-    public function addCategory(Category $category){
-        if(!$this->categories->contains($category)){
-            $this->categories->add($category);
+    public function addGenre(Genre $genre){
+        if(!$this->genres->contains($genre)){
+            $this->genres->add($genre);
         }
     }
 }

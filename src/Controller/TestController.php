@@ -2,7 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
+use App\Entity\Genre;
+use App\Entity\Movie;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,12 +16,16 @@ class TestController extends AbstractController
      */
     public function index(EntityManagerInterface $entityManager)
     {
-        $category = new Category();
-        $category->setName('zika');
-        $entityManager->persist($category);
-        $entityManager->flush();
-        $res =$entityManager->getRepository(Category::class)->findOneBy(['name'=>'zika']);
+        /**
+         * @var $movie Movie
+         */
+        $movie = $entityManager->getRepository(Movie::class)->findOneBy(['tconst'=>'tt0004447']);
+        foreach ($movie->getCategories() as $category){
+            dump($category);
+        }
+        echo $movie->getOriginalTitle();
 
-        return new Response($res->getName());
+
+        return new Response('pera');
     }
 }

@@ -16,10 +16,11 @@ class ImportManager
         $this->importers = $importers;
     }
 
-    public function runImport($file)
+    public function runImport($file,$type)
     {
 
         foreach ($this->importers as $importer){
+            if(!$importer->supports($type)) continue;
             $importer->setFile($file);
             $importer->import();
         }

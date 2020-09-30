@@ -5,7 +5,6 @@ namespace App\Command;
 
 
 use App\Import\ImportManager;
-use App\Import\MoviesImporter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -37,18 +36,22 @@ class Import extends Command
             ->setHelp('This command is used for importing data.');
 
         $this->addArgument('file', InputArgument::REQUIRED, 'Enter a file to be imported');
+        $this->addArgument('import_type', InputArgument::REQUIRED, 'Enter import type');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
         $file = $input->getArgument('file');
+        $importType = $input->getArgument('import_type');
+
+
         if(!$this->filesystem->exists($file)) {
             $output->writeln('File does not exist');
             return 0 ;
         }
 
-        $this->importManager->runImport($file);
+        $this->importManager->runImport($file,$importType);
 
 
         return Command::SUCCESS;
