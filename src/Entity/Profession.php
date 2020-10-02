@@ -28,9 +28,15 @@ class Profession
      */
     private $names;
 
+    /**
+     * @ORM\OneToMany (targetEntity="App\Entity\MovieNameProfession" , mappedBy="profession")
+     */
+    private $moviesAndNames;
+
     public function __construct()
     {
         $this->names = new ArrayCollection();
+        $this->moviesAndNames = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -62,6 +68,20 @@ class Profession
     {
         if(!$this->names->contains($name)){
             $this->names->add($name);
+        }
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getMoviesAndNames(): ArrayCollection
+    {
+        return $this->moviesAndNames;
+    }
+
+    public function addMoviesAndNames(MovieNameProfession $movieNameProfession){
+        if(!$this->moviesAndNames->contains($movieNameProfession)){
+            $this->moviesAndNames->add($movieNameProfession);
         }
     }
 

@@ -24,6 +24,9 @@ class NamesImporter extends ImportFather implements ImporterInterface
         $handle = fopen($this->file,"r");
 
         for($i = 0 ; $row = fgets($handle); $i ++ ){
+
+            if($i === 0) continue;
+
             $data = explode("\t",$row);
             $nameEntity = new Name();
             $nameEntity->setName($data[1]);

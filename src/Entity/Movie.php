@@ -61,9 +61,16 @@ class Movie
     private $genres;
 
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\MovieNameProfession", mappedBy="movie")
+     */
+    private $crew;
+
+
     public function __construct()
     {
         $this->genres = new ArrayCollection();
+        $this->crew = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -163,6 +170,21 @@ class Movie
     public function addGenre(Genre $genre){
         if(!$this->genres->contains($genre)){
             $this->genres->add($genre);
+        }
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCrew(): ArrayCollection
+    {
+        return $this->crew;
+    }
+
+    public function addCrew(MovieNameProfession $movieNameProfession)
+    {
+        if(!$this->crew->contains($movieNameProfession)){
+            $this->crew->add($movieNameProfession);
         }
     }
 }
