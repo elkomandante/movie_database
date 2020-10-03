@@ -24,4 +24,9 @@ class ImportFather
         $this->file =$file;
     }
 
+    public function executeQuery($query){
+        $conn = $this->entityManager->getConnection();
+        $conn->prepare($query)->execute();
+    }
+
 }

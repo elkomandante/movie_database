@@ -14,14 +14,10 @@ class Movie
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $tconst;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -78,17 +74,6 @@ class Movie
         return $this->id;
     }
 
-    public function getTconst(): ?string
-    {
-        return $this->tconst;
-    }
-
-    public function setTconst(string $tconst): self
-    {
-        $this->tconst = $tconst;
-
-        return $this;
-    }
 
     public function getPrimaryTitle(): ?string
     {

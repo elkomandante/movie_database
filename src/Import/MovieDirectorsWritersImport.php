@@ -22,48 +22,39 @@ class MovieDirectorsWritersImport extends ImportFather implements ImporterInterf
 
     public function import()
     {
-        $handle = fopen($this->file,"r");
-        for($i = 0; $row = fgets($handle); $i++){
-            if($i === 0) continue;
-            $data = explode("\t",$row);
+        $handle = fopen($this->file, "r");
+        for ($i = 0; $row = fgets($handle); $i++) {
+            if ($i === 0) continue;
+            $data = explode("\t", $row);
+
+
+            /**
+             * @var Movie $movie
+             */
             $movie = $this->entityManager->getRepository(Movie::class)->findOneBy(['tconst' => $data[0]]);
 
+            if (!$movie) continue;
+
+            $name = $this->entityManager->getRepository(Name::class)->findOneBy(['nconst' => $data[2]]);
+            $profession = $this->entityManager->getRepository(Profession::class)->findOneBy(['name' => $data[3]]);
 
 
-            if(!$movie) continue;
+            if (!$profession || !$name) continue;
 
-            $directors = explode(",",$data[1]);
-            $directorsProfession = $this->entityManager->getRepository(Profession::class)->findOneBy(['name' => 'director']);
+            echo $movie->getOriginalTitle()."\n";
+            echo $profession->getName()."\n";
+            echo $name->getName()."\n";
 
-            foreach ($directors as $director){
-                $directorEntity = $this->entityManager->getRepository(Name::class)->findOneBy(['nconst' => $director]);
-                if(!$directorEntity) continue;
-                $movieNameProfession = new MovieNameProfession();
-                $movieNameProfession->setMovie($movie);
-                $movieNameProfession->setName($directorEntity);
-                $movieNameProfession->setProfession($directorsProfession);
-                $this->entityManager->persist($movieNameProfession);
-            }
+            echo "\n\n\n";
 
-            $writers = explode(",",$data[2]);
-            $writersProfession = $this->entityManager->getRepository(Profession::class)->findOneBy(['name' => 'writer']);
+            $movieNameProfession = new MovieNameProfession();
+            $movieNameProfession->setMovie($movie);
+            $movieNameProfession->setName($name);
+            $movieNameProfession->setProfession($profession);
 
-
-            foreach ($writers as $writer){
-                $writerEntity = $this->entityManager->getRepository(Name::class)->findOneBy(['nconst'=>$writer]);
-                if(!$writerEntity) continue;
-                $movieNameProfession = new MovieNameProfession();
-                $movieNameProfession->setMovie($movie);
-                $movieNameProfession->setProfession($writersProfession);
-                $movieNameProfession->setName($writerEntity);
-                $this->entityManager->persist($movieNameProfession);
-            }
-
-        if($i % 100 === 0){
+            $this->entityManager->persist($movieNameProfession);
             $this->entityManager->flush();
-            $this->entityManager->clear();
-            $this->entityManager->getUnitOfWork()->clear();
-        }
+
 
 
         }
