@@ -21,39 +21,42 @@ class NamesImporter extends ImportFather implements ImporterInterface
 
     public function import()
     {
+        $sqlQuery = "INSERT INTO name VALUES ";
+        $newQuery = $sqlQuery;
+
         $handle = fopen($this->file,"r");
+        $conn = $this->entityManager->getConnection();
 
         for($i = 0 ; $row = fgets($handle); $i ++ ){
 
             if($i === 0) continue;
 
             $data = explode("\t",$row);
-            $nameEntity = new Name();
-            $nameEntity->setName($data[1]);
-            $nameEntity->setNconst($data[0]);
-            $nameEntity->setBirthYear(is_numeric($data[2])? (int)$data[2] : 0);
-            $nameEntity->setDeathYear(is_numeric($data[3])? (int)$data[3] : 0);
-            $this->entityManager->persist($nameEntity);
 
+            $newQuery .= sprintf("(%s,%s,%s,%s),",$conn->quote($data[0]),$conn->quote($data[1]),is_numeric($data[2])? (int)$data[2] : 0,is_numeric($data[3])? (int)$data[3] : 0);
+
+
+
+            /*
             $professions = explode(",",$data[4]);
 
             foreach ($professions as $profession){
-                /*** @var $professionEntity Profession */
+                 @var $professionEntity Profession
                 $professionEntity = $this->entityManager->getRepository(Profession::class)->findOneBy(['name' => $profession]);
                 if(!$professionEntity) continue;
                 $professionEntity->addName($nameEntity);
                 $nameEntity->addProfession($professionEntity);
 ;
             }
+            */
 
-            if($i % 100000  === 0){
-                $this->entityManager->flush();
-                $this->entityManager->clear();
-                $this->entityManager->getUnitOfWork()->clear();
+            if($i % 200000  === 0){
+                $this->executeQuery(rtrim($newQuery,','));
+                $newQuery = $sqlQuery;
             }
         }
 
-        $this->entityManager->flush();
         fclose($handle);
+        $this->executeQuery(rtrim($newQuery,','));
     }
 }

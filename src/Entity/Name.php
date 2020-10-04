@@ -14,7 +14,7 @@ class Name
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
     private $id;
 
@@ -33,10 +33,7 @@ class Name
      */
     private $deathYear;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $nconst;
+
 
 
     /**
@@ -97,17 +94,6 @@ class Name
         return $this;
     }
 
-    public function getNconst(): ?string
-    {
-        return $this->nconst;
-    }
-
-    public function setNconst(string $nconst): self
-    {
-        $this->nconst = $nconst;
-
-        return $this;
-    }
 
     /**
      * @return ArrayCollection
